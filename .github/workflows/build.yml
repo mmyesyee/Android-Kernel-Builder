@@ -53,8 +53,20 @@ jobs:
         run: |
           sudo add-apt-repository ppa:deadsnakes/ppa
           sudo apt-get update
-          sudo apt-get install -y build-essential bc curl git zip ftp gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi libssl-dev lftp zstd wget libfl-dev python2 python3 libarchive-tools
+          sudo apt-get install -y build-essential bc curl git zip ftp gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi libssl-dev lftp zstd wget libfl-dev python3 libarchive-tools
 
+      - name: "🤔 build python2"
+        run: |
+         wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz
+         tar -xvf Python-2.7.18.tar.xz
+         cd Python-2.7.18
+         ./configure --enable-optimizations
+         make -j$(nproc)
+         sudo make altinstall
+         sudo ln -sf /usr/local/bin/python2.7 /usr/bin/python
+         sudo ln -sf /usr/local/bin/python2.7 /usr/bin/python2
+         python --version
+        
       - name: "🌟 Clone kernel source => (${{ env.kernelRepo }})"
         working-directory: ./${{ env.kernelDir }}
         run: |
